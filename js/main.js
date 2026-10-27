@@ -1,14 +1,14 @@
 // ===== Company details — edit these once, they update on every page =====
 // The values below are SAMPLE PLACEHOLDERS. Replace them with the real details.
 const COMPANY = {
-  name: "CMA",
-  nameSuffix: "GLOBAL LTD",
-  fullName: "CMA Global LTD",
+  name: "Company Name",                                   // SAMPLE: short name shown next to the logo
+  nameSuffix: "",                                        // SAMPLE: optional small line under the name, e.g. "GROUP LTD"
+  fullName: "Company Name",                               // SAMPLE: full legal name used in page text
   logo: "favicon.svg",                                     // SAMPLE: replace favicon.svg with your logo file (header, footer and browser tab)
   email: "info@example.com",                               // SAMPLE: replace with the real email
   phone: "+1 (555) 000-0000",                              // SAMPLE: replace with the real phone number (leave "" to hide it)
   address: "123 Sample Street, Suite 100, Sample City, ST 00000", // SAMPLE: replace with the real address
-  registration: ""                                         // Optional, e.g. "CMA Global LTD. ACN 000 000 000."
+  registration: ""                                         // Optional, e.g. "Company Name. Registration No. 000 000 000."
 };
 
 const NAV = [
@@ -25,7 +25,7 @@ const brandHtml = `
     <img class="brand-mark" src="${COMPANY.logo}" alt="" width="38" height="38">
     <div class="brand-text">
       <span class="brand-name">${COMPANY.name}</span>
-      <span class="brand-sub">${COMPANY.nameSuffix}</span>
+      ${COMPANY.nameSuffix ? `<span class="brand-sub">${COMPANY.nameSuffix}</span>` : ""}
     </div>
   </a>`;
 
