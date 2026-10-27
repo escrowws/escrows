@@ -148,25 +148,62 @@ function initReveal() {
   });
 }
 
-// Contact form: opens the visitor's email app with the enquiry pre-filled.
-// Swap this for a form backend (e.g. Formspree, your own API) when you go live.
+
+const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+// Contact form: sends the enquiry to COMPANY.email via FormSubmit (https://formsubmit.co), no server needed.
+// The very first submission triggers a one-time activation email to COMPANY.email; click the link in it once.
 function initContactForm() {
   const form = document.getElementById("contact-form");
   if (!form) return;
-  form.addEventListener("submit", e => {
+  const status = document.getElementById("form-status");
+  const button = form.querySelector('button[type="submit"]');
+  const buttonHtml = button.innerHTML;
+  const endpoint = `https://formsubmit.co/ajax/${COMPANY.email}`;
+
+  const showStatus = (html, isError) => {
+    status.innerHTML = html;
+    status.classList.toggle("error", !!isError);
+    status.classList.add("show");
+  };
+
+  form.addEventListener("submit", async e => {
     e.preventDefault();
     const data = new FormData(form);
-    const subject = `Enquiry: ${data.get("service")} — ${data.get("name")}`;
-    const body = [
-      `Name: ${data.get("name")}`,
-      `Email: ${data.get("email")}`,
-      `Phone: ${data.get("phone") || "-"}`,
-      `Service: ${data.get("service")}`,
-      "",
-      data.get("message")
-    ].join("\n");
-    location.href = `mailto:${COMPANY.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    document.getElementById("form-status").classList.add("show");
+    if (data.get("_honey")) { form.reset(); return; } // hidden field filled in: a bot, drop silently
+
+    button.disabled = true;
+    button.innerHTML = 'Sending&hellip; <i class="fa-solid fa-spinner fa-spin"></i>';
+    status.classList.remove("show");
+
+    const payload = {
+      name: data.get("name"),
+      email: data.get("email"),
+      phone: data.get("phone") || "-",
+      service: data.get("service"),
+      message: data.get("message"),
+      _subject: `Website enquiry: ${data.get("service")} — ${data.get("name")}`,
+      _replyto: data.get("email"),
+      _template: "table",
+      _captcha: "false"
+    };
+
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const result = await res.json().catch(() => ({}));
+      if (!res.ok || String(result.success) !== "true") throw new Error(result.message || `HTTP ${res.status}`);
+      form.reset();
+      showStatus(`<i class="fa-solid fa-circle-check"></i> Thank you, your message has been sent. We'll reply to <strong>${escapeHtml(payload.email)}</strong> as soon as we can.`);
+    } catch (err) {
+      showStatus(`<i class="fa-solid fa-triangle-exclamation"></i> Sorry, your message could not be sent. Please email us directly at <a href="mailto:${COMPANY.email}">${COMPANY.email}</a>.`, true);
+    } finally {
+      button.disabled = false;
+      button.innerHTML = buttonHtml;
+    }
   });
 }
 
