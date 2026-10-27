@@ -10,7 +10,7 @@ const COMPANY = {
   state: "Victoria (VIC)",
   logo: "images/logo-mark.png",                            // Shield mark (header, footer, favicon). Full lockup: images/logo.png
   email: "info@maslominternational.com",
-  address: "123 Sample Street, Suite 100, Sample City, ST 00000" // SAMPLE: replace with the real address
+  address: "Melbourne VIC 3000"
 };
 // Fine print shown under the footer description
 const nb = s => s.replace(/ /g, String.fromCharCode(160)); // keep ABN/ACN numbers on one line
