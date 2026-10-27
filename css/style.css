@@ -1,4 +1,4 @@
-/* ===== Company Name — shared styles ===== */
+/* ===== Maslom International — shared styles ===== */
 :root {
   --navy: #0a1428;
   --navy-2: #0f1d3a;
@@ -101,7 +101,8 @@ h3, h4 { font-weight: 700; letter-spacing: -0.01em; }
   width: 40px;
   height: 40px;
   flex-shrink: 0;
-  filter: drop-shadow(0 4px 12px rgba(34, 211, 238, 0.35));
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(37, 99, 235, 0.45));
   transition: transform 0.25s;
 }
 

@@ -1,15 +1,20 @@
 // ===== Company details — edit these once, they update on every page =====
-// The values below are SAMPLE PLACEHOLDERS. Replace them with the real details.
 const COMPANY = {
-  name: "Company Name",                                   // SAMPLE: short name shown next to the logo
-  nameSuffix: "",                                        // SAMPLE: optional small line under the name, e.g. "GROUP LTD"
-  fullName: "Company Name",                               // SAMPLE: full legal name used in page text
-  logo: "favicon.svg",                                     // SAMPLE: replace favicon.svg with your logo file (header, footer and browser tab)
-  email: "info@example.com",                               // SAMPLE: replace with the real email
-  phone: "+1 (555) 000-0000",                              // SAMPLE: replace with the real phone number (leave "" to hide it)
-  address: "123 Sample Street, Suite 100, Sample City, ST 00000", // SAMPLE: replace with the real address
-  registration: ""                                         // Optional, e.g. "Company Name. Registration No. 000 000 000."
+  name: "Maslom International",                            // Short name shown next to the logo
+  nameSuffix: "PTY LTD",                                   // Small line under the name
+  fullName: "Maslom International Pty Ltd",                // Full legal name used in page text
+  abn: "19 128 284 864",                                   // Australian Business Number
+  acn: "128 284 864",                                      // Australian Company Number
+  companyType: "Australian proprietary company",
+  registeredDate: "1 November 2007",
+  state: "Victoria (VIC)",
+  logo: "images/logo-mark.png",                            // Shield mark (header, footer, favicon). Full lockup: images/logo.png
+  email: "info@maslominternational.com",
+  address: "123 Sample Street, Suite 100, Sample City, ST 00000" // SAMPLE: replace with the real address
 };
+// Fine print shown under the footer description
+const nb = s => s.replace(/ /g, String.fromCharCode(160)); // keep ABN/ACN numbers on one line
+COMPANY.registration = `${COMPANY.fullName} · ABN ${nb(COMPANY.abn)} · ACN ${nb(COMPANY.acn)}. ${COMPANY.companyType}, registered in ${COMPANY.state} on ${COMPANY.registeredDate}.`;
 
 const NAV = [
   { href: "index.html", label: "Home" },
@@ -91,7 +96,6 @@ function renderFooter() {
           <ul class="footer-contact">
             <li><i class="fa-solid fa-location-dot"></i><span>${COMPANY.address}</span></li>
             <li><i class="fa-solid fa-envelope"></i><a href="mailto:${COMPANY.email}">${COMPANY.email}</a></li>
-            ${COMPANY.phone ? `<li><i class="fa-solid fa-phone"></i><a href="tel:${COMPANY.phone.replace(/\s+/g, "")}">${COMPANY.phone}</a></li>` : ""}
           </ul>
         </div>
       </div>
@@ -105,7 +109,7 @@ function renderFooter() {
     </div>`;
 }
 
-// Fill any element marked with data-company="email|address|phone|fullName"
+// Fill any element marked with data-company="<any COMPANY key>", e.g. email, address, fullName, abn, acn
 function fillCompanyDetails() {
   document.querySelectorAll("[data-company]").forEach(el => {
     const value = COMPANY[el.dataset.company];
@@ -116,7 +120,6 @@ function fillCompanyDetails() {
     }
     el.textContent = value;
     if (el.tagName === "A" && el.dataset.company === "email") el.href = `mailto:${value}`;
-    if (el.tagName === "A" && el.dataset.company === "phone") el.href = `tel:${value.replace(/\s+/g, "")}`;
   });
 }
 
